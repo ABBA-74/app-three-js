@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr-FR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Intro à Three.JS</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="canvas js-canvas"></div>
+    <form class="form js-search-form">
+      <label for="city"> Tapez le nom d'une ville</label>
+      <div class="input-group">
+        <input type="text" id="city" class="js-search-input" />
+        <button type="submit">Valider</button>
+      </div>
+    </form>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+          "GLTFLoader": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/loaders/GLTFLoader.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

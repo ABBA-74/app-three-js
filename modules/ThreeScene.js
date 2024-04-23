@@ -8,7 +8,10 @@ import { store } from './Store.js';
 export default class ThreeScene {
   constructor() {
     this.loadFont();
-    // this.getObjectFromScene();
+    this.isWindTurbine1CorrectPos = false;
+    this.isWindTurbine2CorrectPos = false;
+    this.frameCount = 0;
+
     this.init();
   }
 
@@ -54,15 +57,21 @@ export default class ThreeScene {
 
   initObjects() {
     this.wings = ['Ailes_1', 'Ailes_2'].map((name) => {
-      console.log(this.getObjectFromScene(name));
       return this.getObjectFromScene(name);
     });
     this.rotors = ['Rotor_eolienne_1', 'Rotor_eolienne_2'].map((name) => {
-      console.log(this.getObjectFromScene(name));
       return this.getObjectFromScene(name);
     });
     this.axes = ['Axis_eolienne_1', 'Axis_eolienne_2'].map((name) => {
-      console.log(this.getObjectFromScene(name));
+      return this.getObjectFromScene(name);
+    });
+    this.spotlights = ['Light_eolienne_1', 'Light_eolienne_2'].map((name) => {
+      return this.getObjectFromScene(name);
+    });
+    this.leds = ['Led_1', 'Led_2'].map((name) => {
+      return this.getObjectFromScene(name);
+    });
+    this.radarflashes = ['Radar_flash_1', 'Radar_flash_2'].map((name) => {
       return this.getObjectFromScene(name);
     });
     this.needle = this.getObjectFromScene('Aiguille');
@@ -83,6 +92,7 @@ export default class ThreeScene {
         this.setTextureCompass();
         this.setTextureWindSpeed();
         this.initObjects();
+        this.resetAllRadarFlashes();
       },
       undefined,
       (error) => {
@@ -100,21 +110,87 @@ export default class ThreeScene {
   }
 
   handleMoveCars() {
-    this.moveCar(this.car1, 0.03, 30);
-    this.moveCar(this.car2, -0.02, -30);
+    if (!this.car1 || !this.car2) return;
+
+    this.car1.speed = this.car1.speed || 0.03;
+    this.car2.speed = this.car2.speed || -0.015;
+
+    this.moveCar(this.car1, this.car1.speed, 30);
+    this.moveCar(this.car2, this.car2.speed, -30);
+  }
+
+  getRandomSpeed() {
+    return (Math.floor(Math.random() * 8) + 2) / 100;
   }
 
   moveCar(car, speed, boundary) {
-    if (car) {
-      if (
-        (speed > 0 && car.position.z > boundary) ||
-        (speed < 0 && car.position.z < boundary)
-      ) {
+    if (car.name == 'Car_1') {
+      if (car.position.z > boundary) {
+        car.speed = this.getRandomSpeed();
         car.position.z = -boundary;
       } else {
-        car.position.z += speed;
+        this.controlSpeed(car);
+        car.position.z += car.speed;
       }
     }
+    if (car.name == 'Car_2') {
+      if (car.position.z < boundary) {
+        car.speed = -this.getRandomSpeed();
+        car.position.z = -boundary;
+      } else {
+        this.controlSpeed(car);
+        car.position.z += car.speed;
+      }
+    }
+  }
+
+  controlSpeed(car) {
+    const speedLimite = 0.05;
+    let isDistanceControlCar1 = false;
+    let isDistanceControlCar2 = false;
+    let ctrlRadarDistance = 5;
+    if (car.name == 'Car_1') {
+      isDistanceControlCar1 =
+        Math.floor(car.position.z) > -ctrlRadarDistance &&
+        Math.floor(car.position.z) < 0;
+    } else {
+      isDistanceControlCar2 =
+        Math.floor(car.position.z) < ctrlRadarDistance &&
+        Math.floor(car.position.z) > 0;
+    }
+    if (
+      (isDistanceControlCar1 || isDistanceControlCar2) &&
+      Math.abs(car.speed) > speedLimite
+    ) {
+      this.activeRadarFlash(car);
+    }
+    if (
+      ((car.name === 'Car_2' && car.position.z < 0) ||
+        (car.name === 'Car_1' && car.position.z > 0)) &&
+      car.flashed
+    ) {
+      this.resetRadarFlash(car);
+
+      car.position.z += car.speed;
+    }
+  }
+
+  activeRadarFlash(car) {
+    const radarIndex = car.name === 'Car_1' ? 1 : 0;
+    this.radarflashes[radarIndex].intensity = 4;
+    car.flashed = true;
+  }
+
+  resetRadarFlash(car) {
+    const radarIndex = car.name === 'Car_1' ? 1 : 0;
+    this.radarflashes[radarIndex].intensity = 0;
+    car.flashed = false;
+  }
+
+  resetAllRadarFlashes() {
+    this.radarflashes.forEach((flash) => {
+      flash.intensity = 0;
+    });
   }
 
   getScene() {
@@ -168,14 +244,13 @@ export default class ThreeScene {
   //   }
 
   updatePositionNeedle() {
-    // let prevWindDirection = 0;
-
+    const offset = 90;
     const windDirectionDeg = store.get('windDirectionDeg');
 
     if (windDirectionDeg !== undefined) {
       const formatNeedlePosX = this.roundNumber(this.needle.rotation.x);
       const formatWindDirectionRad = this.roundNumber(
-        this.convertDegToRad(windDirectionDeg)
+        this.convertDegToRad(windDirectionDeg - offset)
       );
       if (formatNeedlePosX !== formatWindDirectionRad) {
         if (formatNeedlePosX < formatWindDirectionRad)
@@ -306,7 +381,6 @@ export default class ThreeScene {
   updateRingsLight() {
     const ringLight1 = this.getObjectFromScene('Ring_light_1');
     const ringLight2 = this.getObjectFromScene('Ring_light_2');
-    console.log(ringLight1, ringLight2);
 
     ringLight1.material.color.set(this.clrWindSpeed);
     ringLight2.material.color.set(this.clrWindSpeed);
@@ -326,7 +400,6 @@ export default class ThreeScene {
 
     if (this.wings) {
       this.wings.forEach((elObj) => {
-        console.log(elObj);
         if (elObj) {
           elObj.rotation.x += rotateSpeed;
         }
@@ -341,7 +414,6 @@ export default class ThreeScene {
 
     if (this.rotors) {
       this.rotors.forEach((elObj) => {
-        console.log(elObj);
         if (elObj) {
           elObj.rotation.x += rotateSpeed;
         }
@@ -349,23 +421,75 @@ export default class ThreeScene {
     }
   }
 
+  convertRadToDeg(valueRad) {
+    return (valueRad * 180) / Math.PI;
+  }
+
   handleAxesWindTurbine() {
     const windDirectionDeg = store.get('windDirectionDeg');
-    console.log(windDirectionDeg);
-    // if (this.windSpeed === undefined) return;
-    // const speed = +this.windSpeed;
-    // const rotateSpeed = speed * 0.0003;
+    if (windDirectionDeg === undefined || !this.axes) return;
 
-    // if (this.axes) {
-    //   this.axes.forEach((elObj) => {
-    //     console.log(elObj);
-    //     if (elObj) {
-    //       elObj.rotation.y += rotateSpeed;
-    //     }
-    //   });
-    // }
+    // this.handleSpotlightsWindTurbine();
+    const rotateSpeed = 0.001;
+    const resetPosition =
+      this.isWindTurbine1CorrectPos && this.isWindTurbine2CorrectPos;
+    if (resetPosition) {
+      this.isWindTurbine1CorrectPos = false;
+      this.isWindTurbine2CorrectPos = false;
+    }
+
+    this.axes.forEach((turbine) => {
+      if (!turbine) return;
+
+      const turbineOffset = turbine.name === 'Axis_eolienne_1' ? 360 : 180;
+      const targetRad = this.roundNumber(
+        ((turbineOffset - windDirectionDeg) * Math.PI) / 180
+      );
+      let currentRad = this.roundNumber(turbine.rotation.y);
+
+      if (targetRad !== currentRad) {
+        turbine.rotation.y +=
+          targetRad > currentRad ? rotateSpeed : -rotateSpeed;
+      } else {
+        if (turbine.name === 'Axis_eolienne_1') {
+          this.isWindTurbine1CorrectPos = true;
+        } else if (turbine.name === 'Axis_eolienne_2') {
+          this.isWindTurbine2CorrectPos = true;
+        }
+      }
+    });
+  }
+
+  handleSpotlightsWindTurbine() {
+    if (!this.spotlights) return;
+
+    this.spotlights.forEach((spotlight) => {
+      spotlight.intensity = 0; // Initial intensity
+      // this.leds.forEach((led) => {
+      //   led.material.color.set('#ffffff');
+      // });
+      const toggleIntensity = () => {
+        spotlight.intensity = spotlight.intensity === 0 ? 3 : 0;
+
+        // Toggle intensity after a delay of 1000 ms
+        spotlight.timeoutId = setTimeout(toggleIntensity, 1000);
+      };
+
+      // Start toggling intensity
+      toggleIntensity();
+    });
+  }
+
+  resetTimerSpotlights() {
+    if (!this.spotlights) return;
+
+    this.spotlights.forEach((spotlight) => {
+      clearInterval(spotlight.timeoutId);
+    });
   }
   animate = () => {
+    // Incrémenter frameCount à chaque trame
+    this.frameCount++;
     // const start = performance.now();
 
     requestAnimationFrame(this.animate);
@@ -386,5 +510,10 @@ export default class ThreeScene {
     this.updatePositionNeedle();
     this.updateWindSpeed();
     this.handleMoveCars();
+    // Appeler handleSpotlightsWindTurbine moins fréquemment
+    if (this.frameCount % 1000 === 0) {
+      this.resetTimerSpotlights();
+      this.handleSpotlightsWindTurbine();
+    }
   };
 }

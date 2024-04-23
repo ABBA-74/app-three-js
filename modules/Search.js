@@ -41,7 +41,7 @@ class Search {
       const long = cityData.lng;
       new Wind({ lat, long });
     } else {
-      alert("La ville rensiengée n'existe pas");
+      alert("La ville renseignée n'existe pas");
     }
   }
 

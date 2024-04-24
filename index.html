@@ -3,18 +3,83 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Intro à Three.JS</title>
+    <meta
+      name="description"
+      content="Mistral Gagnant vous offre les informations en temps réel sur la vitesse et l'orientation du vent. Idéal pour les passionnés de météorologie et les activités extérieures."
+    />
+    <meta
+      name="keywords"
+      content="vitesse du vent, direction du vent, météorologie, Mistral Gagnant"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Mistral Gagnant" />
+    <meta
+      property="og:description"
+      content="Découvrez en temps réel la vitesse et l'orientation du vent avec Mistral Gagnant."
+    />
+    <meta
+      property="og:image"
+      content="https://abba-74.github.io/app-three-js/assets/landscape.webp"
+    />
+    <meta property="og:url" content="https://abba-74.github.io/app-three-js" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mistral Gagnant" />
+    <meta
+      name="twitter:description"
+      content="Découvrez en temps réel la vitesse et l'orientation du vent avec Mistral Gagnant."
+    />
+    <meta
+      name="twitter:image"
+      content="https://example.com/path/to/twitter-image.jpg"
+    />
+    <title>Mistral Gagnant - Three.JS</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/assets/icons/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/icons/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link
+      rel="mask-icon"
+      href="/assets/icons/safari-pinned-tab.svg"
+      color="#5bbad5"
+    />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="canvas js-canvas"></div>
-    <form class="form js-search-form">
+    <form class="form-search js-search-form">
       <label for="city"> Tapez le nom d'une ville</label>
       <div class="input-group">
         <input type="text" id="city" class="js-search-input" />
         <button type="submit">Valider</button>
       </div>
     </form>
+
+    <div id="modal" class="modal active">
+      <div class="modal-top">
+        <p>Information</p>
+        <div type="button" class="btn-close">&times;</div>
+      </div>
+      <div class="modal-content">
+        <p class="modal-main-msg"></p>
+      </div>
+    </div>
 
     <script type="importmap">
       {
@@ -25,7 +90,6 @@
         }
       }
     </script>
-
     <script type="module" src="app.js"></script>
   </body>
 </html>

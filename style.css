@@ -9,40 +9,44 @@ body {
   font-family: Poppins, Arial, Helvetica, sans-serif;
   width: 100%;
   font-size: 1rem;
+  background-color: #020222;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .canvas {
   position: absolute;
-  top: 0;
+  top: 7.2rem;
   left: 0;
   z-index: 0;
 }
 
-.form {
-  position: relative;
+.form-search {
+  position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: fit-content;
+  width: 100%;
   margin: auto;
   z-index: 1;
-  /* padding: 0.75rem 1rem; */
 }
-.form::before {
+
+.form-search::before {
   content: '';
-  inset: -0.2rem -1.25rem -1.5rem -1.25rem;
   position: absolute;
+  inset: -0.2rem -1.25rem -1.5rem -1.25rem;
   background: #38383871;
   backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
   z-index: -1;
-  border-radius: 0 0 0.72rem 0.72rem;
+  border-radius: 0 0 0.7rem 0.7rem;
   border-bottom: 3px solid rgba(168, 168, 168, 0.811);
 }
 
 label {
-  color: white;
+  color: rgba(240, 248, 255, 0.664);
   margin-block: 0.75rem;
-  user-select: none;
 }
 
 input,
@@ -53,6 +57,7 @@ button {
   border-radius: 0.3rem;
   border: none;
 }
+
 button:focus,
 input:focus {
   outline: none;
@@ -60,15 +65,88 @@ input:focus {
 
 input {
   margin-right: 1rem;
+  max-width: 14rem;
 }
+
 button {
   cursor: pointer;
-  background-color: #020222;
+  background-color: #01011285;
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
   border: 1px solid rgb(39, 39, 39);
-  color: white;
+  color: rgba(240, 248, 255, 0.664);
   box-shadow: 0 0 4px 3px rgba(0, 0, 0, 0.305);
-  transition: box-shadow 0.3s ease-out;
+  transition: all 0.3s ease-out;
 }
+
 button:hover {
   box-shadow: none;
+  color: rgba(240, 248, 255, 0.864);
+}
+
+.modal {
+  display: none;
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: clamp(20rem, 50%, 28rem);
+  border-radius: 0.7rem;
+  overflow: hidden;
+  background-color: #38383871;
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  color: rgba(240, 248, 255, 0.664);
+  border-bottom: 3px solid rgba(168, 168, 168, 0.811);
+  box-shadow: rgba(0, 0, 0, 0.74) 0px 30px 90px;
+  animation: slideDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translate(-50%, -65%);
+  }
+  to {
+    transform: translate(-50%, -50%);
+  }
+}
+.modal-top {
+  display: flex;
+  justify-content: space-between;
+  background-color: #010112a2;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: rgba(240, 248, 255, 0.756);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.326);
+  padding-left: 1rem;
+}
+
+.btn-close {
+  cursor: pointer;
+  color: rgba(240, 248, 255, 0.664);
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-close:hover {
+  color: rgba(240, 248, 255, 0.864);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  height: auto;
+  padding: 1.7rem 2rem;
+}
+
+@media screen and (min-width: 450px) {
+  .form-search {
+    position: relative;
+    max-width: 350px;
+  }
+  .canvas {
+    top: 0;
+  }
 }

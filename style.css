@@ -13,7 +13,9 @@ body {
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  overflow: hidden;
 }
+
 .canvas {
   position: absolute;
   top: 7.2rem;
@@ -73,7 +75,7 @@ button {
   background-color: #01011285;
   backdrop-filter: blur(9px);
   -webkit-backdrop-filter: blur(9px);
-  border: 1px solid rgb(39, 39, 39);
+  border: 1px solid #020222;
   color: rgba(240, 248, 255, 0.664);
   box-shadow: 0 0 4px 3px rgba(0, 0, 0, 0.305);
   transition: all 0.3s ease-out;
@@ -99,7 +101,7 @@ button:hover {
   color: rgba(240, 248, 255, 0.664);
   border-bottom: 3px solid rgba(168, 168, 168, 0.811);
   box-shadow: rgba(0, 0, 0, 0.74) 0px 30px 90px;
-  animation: slideDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: slideDown 0.35s cubic-bezier(0.18, 0.89, 0.56, 1.42) forwards;
 }
 
 @keyframes slideDown {
@@ -110,6 +112,7 @@ button:hover {
     transform: translate(-50%, -50%);
   }
 }
+
 .modal-top {
   display: flex;
   justify-content: space-between;
@@ -139,6 +142,59 @@ button:hover {
   align-items: start;
   height: auto;
   padding: 1.7rem 2rem;
+}
+
+#overlay {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  width: 100%;
+  background-color: #020222;
+  animation: fadeOut 6s ease forwards;
+  opacity: 1;
+}
+
+@keyframes fadeOut {
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.overlay-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  color: white;
+}
+.overlay-content > *:not(.img-wrapper) {
+  position: relative;
+  opacity: 0;
+  transform: translateX(-5rem);
+}
+
+.overlay-content h1 {
+  margin-top: 0.85rem;
+  margin-bottom: 1.15rem;
+  animation: slideLTR 0.75s 0.5s ease-out forwards;
+}
+
+.overlay-content p {
+  text-align: center;
+  width: clamp(20rem, 35%, 35rem);
+  animation: slideLTR 0.75s 1s ease-out forwards;
+}
+
+@keyframes slideLTR {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @media screen and (min-width: 450px) {

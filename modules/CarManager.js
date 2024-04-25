@@ -32,7 +32,7 @@ class CarManager {
   }
 
   getRandomSpeed() {
-    return (Math.floor(Math.random() * 8) + 2) / 100;
+    return (Math.floor(Math.random() * 8) + 3) / 100;
   }
 
   moveCar(car, travelLimit) {

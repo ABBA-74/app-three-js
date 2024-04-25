@@ -1,13 +1,13 @@
 class RadarManager {
   constructor(radarflashes) {
-    this.speedLimite = 0.05;
+    this.speedLimite = 0.04;
     this.ctrlRadarDistance = 5;
     this.radarflashes = radarflashes;
   }
 
   controlSpeed(car) {
     const carPosition = Math.floor(car.position.z);
-    const isDistanceControlled = this.isWithinRadarRange(car.name, carPosition);
+    let isDistanceControlled = this.isWithinRadarRange(car.name, carPosition);
 
     if (isDistanceControlled && Math.abs(car.speed) > this.speedLimite) {
       this.activeRadarFlash(car);
@@ -25,7 +25,7 @@ class RadarManager {
 
   isWithinRadarRange(carName, position) {
     if (carName === 'Car_1') {
-      return position < 0 && position > this.ctrlRadarDistance;
+      return position < 0 && position > -this.ctrlRadarDistance;
     } else if (carName === 'Car_2') {
       return position > 0 && position < this.ctrlRadarDistance;
     }

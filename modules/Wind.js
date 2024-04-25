@@ -38,16 +38,11 @@ class Wind {
     fetch(this.url)
       .then((response) => response.json())
       .then((data) => {
-        // console.log('data', data);
-        // console.log('data', data.current.wind_direction_10m);
-
         const windDirectionDeg = data.current.wind_direction_10m;
         const windSpeedKmPerHour = data.current.wind_speed_10m * 3.6;
 
         store.set('windDirectionDeg', windDirectionDeg);
         store.set('windSpeedKmPerHour', windSpeedKmPerHour);
-
-        // console.log('windDirectionDeg', windSpeedKmPerHour);
       });
   }
 }

@@ -9,21 +9,24 @@ et la longitude correspondantes
 */
 
 import { Wind } from './Wind.js';
+import { ModalManager } from './ModalManager.js';
 
 class Search {
   constructor() {
-    /* 1er temps = il sert à définir les variables, les propriétés */
     this.input = document.querySelector('.js-search-input');
     this.form = document.querySelector('.js-search-form');
+    this.modalManager = new ModalManager();
     this.cities = [];
-    /* 2nd temps = lancer les fonctions, les méthodes */
     this.init();
   }
 
   init() {
-    /* Méthode pour lancer toutes les fonction de ma classe */
     this.getCities();
     this.watchUserInput();
+  }
+
+  removeFrenchAccents(text) {
+    return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
   watchUserInput() {
@@ -37,11 +40,13 @@ class Search {
     const name = this.input.value;
     const cityData = this.getCityData(name);
     if (cityData) {
+      this.modalManager.closeModal();
       const lat = cityData.lat;
       const long = cityData.lng;
       new Wind({ lat, long });
     } else {
-      alert("La ville renseignée n'existe pas");
+      this.modalManager.handleMessageModal();
+      this.modalManager.displayModal();
     }
   }
 
@@ -58,7 +63,12 @@ class Search {
     let cityData = {};
     for (const element of this.cities) {
       const cityNameInDataLower = element.city.toLowerCase();
-      if (cityNameInDataLower === cityNameLower) {
+      const cityNameInDataWithoutFrAccents =
+        removeFrenchAccents(cityNameInDataLower);
+      if (
+        cityNameInDataLower === cityNameLower ||
+        cityNameInDataWithoutFrAccents === cityNameLower
+      ) {
         cityData = element;
         break;
       }
@@ -69,7 +79,10 @@ class Search {
   getCityData(userCityName) {
     const userCityNameLower = userCityName.toLowerCase();
     const data = this.cities.find(
-      (cityObject) => cityObject.city.toLowerCase() === userCityNameLower
+      (cityObject) =>
+        cityObject.city.toLowerCase() === userCityNameLower ||
+        this.removeFrenchAccents(cityObject.city).toLowerCase() ===
+          userCityNameLower
     );
     return data;
   }

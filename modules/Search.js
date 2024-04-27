@@ -37,7 +37,7 @@ class Search {
   }
 
   getLatLong() {
-    const name = this.input.value;
+    const name = this.input.value.trim();
     const cityData = this.getCityData(name);
     if (cityData) {
       this.modalManager.closeModal();
@@ -56,24 +56,6 @@ class Search {
       .then((data) => {
         this.cities = data;
       });
-  }
-
-  getCityDataWithFor(cityName) {
-    const cityNameLower = cityName.toLowerCase();
-    let cityData = {};
-    for (const element of this.cities) {
-      const cityNameInDataLower = element.city.toLowerCase();
-      const cityNameInDataWithoutFrAccents =
-        removeFrenchAccents(cityNameInDataLower);
-      if (
-        cityNameInDataLower === cityNameLower ||
-        cityNameInDataWithoutFrAccents === cityNameLower
-      ) {
-        cityData = element;
-        break;
-      }
-    }
-    return cityData;
   }
 
   getCityData(userCityName) {

@@ -55,6 +55,14 @@ export default class ThreeScene {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.setControls();
 
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.addEventListener('resize', onWindowResize, false);
+
     // Start animation
     this.animate();
   }

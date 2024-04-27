@@ -16,7 +16,7 @@ class WindTurbineManager {
   handleRotors(windSpeed) {
     if (windSpeed === undefined) return;
     const speed = +windSpeed;
-    const rotateSpeed = speed * 0.0003;
+    const rotateSpeed = speed * 0.00025;
 
     if (this.rotors) {
       this.rotors.forEach((elObj) => {

@@ -6,7 +6,7 @@ class WindMillManager {
     if (!windSpeed) return;
 
     const speed = +windSpeed;
-    const rotateSpeed = speed * 0.0003;
+    const rotateSpeed = speed * 0.0004;
 
     if (this.wings) {
       this.wings.forEach((elObj) => {

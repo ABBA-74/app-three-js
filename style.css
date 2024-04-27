@@ -5,9 +5,12 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
+  position: fixed;
   font-family: Poppins, Arial, Helvetica, sans-serif;
   width: 100%;
+  height: 100vh;
   font-size: 1rem;
   background-color: #020222;
   -webkit-user-select: none;
@@ -101,15 +104,15 @@ button:hover {
   color: rgba(240, 248, 255, 0.664);
   border-bottom: 3px solid rgba(168, 168, 168, 0.811);
   box-shadow: rgba(0, 0, 0, 0.74) 0px 30px 90px;
-  animation: slideDown 0.35s cubic-bezier(0.18, 0.89, 0.56, 1.42) forwards;
+  animation: slideDown 0.3s cubic-bezier(0.18, 0.89, 0.56, 1.42) forwards;
 }
 
 @keyframes slideDown {
   from {
-    transform: translate(-50%, -65%);
+    transform: translate(-50%, -85%);
   }
   to {
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -45%);
   }
 }
 
@@ -148,7 +151,6 @@ button:hover {
   position: absolute;
   z-index: 10;
   inset: 0;
-  width: 100%;
   background-color: #020222;
   animation: fadeOut 6s ease forwards;
   opacity: 1;
@@ -177,6 +179,10 @@ button:hover {
   opacity: 0;
   transform: translateX(-5rem);
 }
+.img-wrapper img {
+  height: 7.2rem;
+  width: auto;
+}
 
 .overlay-content h1 {
   margin-top: 0.85rem;
@@ -188,6 +194,8 @@ button:hover {
   text-align: center;
   width: clamp(20rem, 35%, 35rem);
   animation: slideLTR 0.75s 1s ease-out forwards;
+  padding-inline: 0.75rem;
+  line-height: 1.55;
 }
 
 @keyframes slideLTR {
@@ -204,5 +212,21 @@ button:hover {
   }
   .canvas {
     top: 0;
+  }
+}
+
+@media screen and (orientation: landscape) and (max-width: 767px) {
+  .img-wrapper img {
+    height: 4rem;
+    width: auto;
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translate(-50%, -85%);
+    }
+    to {
+      transform: translate(-50%, -18%);
+    }
   }
 }

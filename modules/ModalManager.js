@@ -2,6 +2,7 @@ class ModalManager {
   constructor() {
     this.input = document.querySelector('.js-search-input');
     this.modal = document.querySelector('#modal');
+    this.wrapperModal = document.querySelector('.wrapper-modal');
     this.btnClose = document.querySelector('.btn-close');
     this.mainMsg = document.querySelector('#modal .modal-main-msg');
     this.isModalOpened = false;
@@ -9,11 +10,13 @@ class ModalManager {
 
   displayModal() {
     this.modal.style.display = 'block';
+    this.wrapperModal.classList.add('active');
     this.btnClose.addEventListener('click', () => this.closeModal());
   }
 
   closeModal() {
     this.modal.style.display = 'none';
+    this.wrapperModal.classList.remove('active');
     this.isModalOpened = true;
   }
 

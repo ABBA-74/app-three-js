@@ -89,6 +89,20 @@ button:hover {
   color: rgba(240, 248, 255, 0.864);
 }
 
+.wrapper-modal {
+  position: absolute;
+  top: 0;
+  height: 0;
+  width: 100%;
+  background-color: #02022200;
+  transition: background-color 0.25s ease-out;
+}
+.wrapper-modal.active {
+  height: 100vh;
+  z-index: 2;
+  background-color: #020222d6;
+}
+
 .modal {
   display: none;
   position: absolute;
@@ -219,14 +233,5 @@ button:hover {
   .img-wrapper img {
     height: 4rem;
     width: auto;
-  }
-
-  @keyframes slideDown {
-    from {
-      transform: translate(-50%, -85%);
-    }
-    to {
-      transform: translate(-50%, -18%);
-    }
   }
 }

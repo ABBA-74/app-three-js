@@ -179,23 +179,15 @@ export default class ThreeScene {
   addWindSpeed(windSpeed) {
     if (windSpeed === undefined) return;
 
+    this.addUnitWindSpeed();
     WindSpeedColorUpdater.updateClr(windSpeed);
 
-    this.addUnitWindSpeed();
+    const textGeometry = this.createTextGeometry(windSpeed);
+    const windSpeedColor = store.get('clrWindSpeed');
 
     if (!this.windSpeedMesh) {
-      const textGeometry = new TextGeometry(windSpeed, {
-        font: this.font,
-        size: 1,
-        depth: 0.2,
-        curveSegments: 12,
-        bevelEnabled: true,
-        bevelThickness: 0.03,
-        bevelSize: 0.02,
-        bevelSegments: 5,
-      });
       const textMaterial = new THREE.MeshBasicMaterial({
-        color: store.get('clrWindSpeed'),
+        color: windSpeedColor,
       });
       this.windSpeedMesh = new THREE.Mesh(textGeometry, textMaterial);
       this.windSpeedMesh.position.set(-7.2, 3, 0.8);
@@ -203,21 +195,45 @@ export default class ThreeScene {
       this.scene.add(this.windSpeedMesh);
     } else {
       this.windSpeedMesh.geometry.dispose();
-      this.windSpeedMesh.geometry = new TextGeometry(windSpeed, {
-        font: this.font,
-        size: 1,
-        depth: 0.2,
-        curveSegments: 12,
-        bevelEnabled: true,
-        bevelThickness: 0.03,
-        bevelSize: 0.02,
-        bevelSegments: 5,
-      });
+      this.windSpeedMesh.geometry = textGeometry;
+      this.windSpeedMesh.material.color.set(windSpeedColor);
     }
-    this.windSpeedMesh.material.color.set(store.get('clrWindSpeed'));
 
     this.prevSpeed = this.windSpeed;
     this.updateRingsLight();
+  }
+
+  createTextGeometry(windSpeed) {
+    let textGeometry = new TextGeometry(windSpeed, {
+      font: this.font,
+      size: 1,
+      depth: 0.2,
+      curveSegments: 12,
+      bevelEnabled: true,
+      bevelThickness: 0.03,
+      bevelSize: 0.02,
+      bevelSegments: 5,
+    });
+    return this.centerTextGeomtry(windSpeed, textGeometry);
+  }
+
+  // Centrer text geometry according to digit entries
+  centerTextGeomtry(windSpeed, textGeometry) {
+    let offset = 0;
+    if (windSpeed.length > 2) {
+      offset = -0.18;
+    } else if (windSpeed.length === 1) {
+      offset = 0.6;
+    }
+
+    textGeometry.computeBoundingBox();
+    textGeometry.computeVertexNormals();
+
+    const textWidth =
+      textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
+    textGeometry.translate(offset * textWidth, 0, 0);
+
+    return textGeometry;
   }
 
   addUnitWindSpeed() {
